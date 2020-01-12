@@ -25,7 +25,7 @@ def access(id):
     lock_id = auth.get_lock(id)
     lock.open(lock_id)
     while(lock.is_open()):
-        scan = rfid.scan_RFID()
+        scan = rfid.scan_RFID(block=False)
         if scan == id:
             reset_password(id)
     lock.close()
