@@ -9,10 +9,10 @@ def authenticate():
     id = rfid.scan_RFID()
     if id == None:
         return id, False, 'RFID failed'
-    if not auth.is_valid(id):
-        return id, False, 'User not registered'
     if auth.is_admin(id):
         return None, True, 'Admin mode enabled'
+    if not auth.is_valid(id):
+        return id, False, 'User not registered'
     primary = pass0.read()
     if not auth.verify(id, primary, 0):
         return id, False, 'Primary password incorrect'
