@@ -1,9 +1,9 @@
-# import RFIDScanner as rfid
-# import Authentication as auth
-# import PrimaryPass as pass0
-# import SecondaryPass as pass1
-# import SafeLock as lock
-# import Logger as logger
+import RFIDScanner as rfid
+import Authentication as auth
+import PrimaryPass as pass0
+import SecondaryPass as pass1
+import SafeLock as lock
+import Logger as logger
 
 def authenticate():
     id = rfid.scan_RFID()
