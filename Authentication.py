@@ -25,7 +25,7 @@ def set(id, primary, secondary):
 def verify(id, password, level):
     column = ['pass0', 'pass1'][level]
     conn = sqlite3.connect(database)
-    cursor = conn.execute('SELECT ? FROM users WHERE id=?;', (column, id))
+    cursor = conn.execute('SELECT {} FROM users WHERE id=?;'.format(column), (id,))
     row = cursor.fetchone()
     conn.close()
     if row == None:
