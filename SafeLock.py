@@ -1,8 +1,8 @@
 import Display
 # import Adafruit_BBIO.PWM as PWM
 
-# servo = "P9_14"
-open = False
+# servo = 'P9_14'
+locked = { 0 : False }
 
 # def set_angle(angle):
 #     dutyCycle = 0.05 * angle + 3
@@ -11,15 +11,15 @@ open = False
 # def init():
 #     PWM.start(servo, 3, 50)
 
-def open():
+def open(id):
     # set_angle(90)
-    open = True
+    locked[id] = False
     Display.write('Unlocked\n\r')
 
-def close():
+def close(id):
     # set_angle(0)
-    open = False
+    locked[id] = True
     Display.write('Locked\n\r')
 
-def is_open():
-    return open
+def is_open(id):
+    return not locked[id]

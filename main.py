@@ -24,11 +24,11 @@ def authenticate():
 def access(id):
     lock_id = auth.get_lock(id)
     lock.open(lock_id)
-    while(lock.is_open()):
+    while(lock.is_open(lock_id)):
         scan = rfid.scan_RFID(block=False)
         if scan == id:
             reset_password(id)
-    lock.close()
+    lock.close(lock_id)
 
 def admin_mode():
     id = rfid.scan_RFID()
