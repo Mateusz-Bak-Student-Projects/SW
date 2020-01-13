@@ -15,8 +15,8 @@
 #                 b = ser.read_until('\n')
 #                 if len(b) == 0:
 #                     return None
-#                 s.append(b.decode('utf-8'))
+#                 s += b.decode('utf-8')
 #             return int(s[:-1])
 
 def scan_RFID(block=True):
-    return int(input())
+    return int(input('RFID: '))
