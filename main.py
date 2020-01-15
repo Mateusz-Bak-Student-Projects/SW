@@ -5,6 +5,7 @@ import SecondaryPass as pass1
 import SafeLock as lock
 import Logger as logger
 import Display
+import time
 
 def authenticate(retries=1):
     id = rfid.scan_RFID()
@@ -33,26 +34,39 @@ def authenticate(retries=1):
     return id, True, 'Access granted'
 
 def access(id):
+    Display.write('Unlocked')
     lock_id = auth.get_lock(id)
     lock.open(lock_id)
     while(lock.is_open(lock_id)):
         scan = rfid.scan_RFID(block=False)
         if scan == id:
-            reset_password(id)
+            if reset_password(id):
+                Display.write('Unlocked', 'Passcode set')
+            else:
+                Display.write('Unlocked', 'Invalid passcode')
     lock.close(lock_id)
 
 def admin_mode():
+    Display.write('Locked', 'Admin mode')
     id = rfid.scan_RFID()
     if id == None:
         return
     if not auth.is_admin(id):
-        reset_password(id)
+        if reset_password(id):
+            Display.write('Locked', 'Passcode set')
+        else:
+            Display.write('Locked', 'Invalid passcode')
+        time.sleep(3)
 
 def reset_password(id, confirm=True):
-    primary = pass0.read()
+    Display.write('+PIN 1: ', 'Set new passcode')
+    primary = pass0.read(prompt='+PIN 1: ')
+    Display.write(' PIN 1: ', 'Confirm passcode')
     if primary == None or (confirm and primary != pass0.read()):
         return False
-    secondary = pass1.read()
+    Display.write(' PIN 1: ********', '+PIN 2: ')
+    secondary = pass1.read(prompt='+PIN 2: ')
+    Display.write(' PIN 1: ********', ' PIN 2: Confirm')
     if secondary == None or (confirm and secondary != pass1.read()):
         return False
     auth.set(id, primary, secondary)
@@ -65,10 +79,8 @@ def main():
         if id != None:
             logger.log(id, status)
             if valid:
-                Display.write('Unlocked')
                 access(id)
         elif valid:
-            Display.write('Locked', 'Admin mode')
             admin_mode()
         Display.write('Locked')
 
