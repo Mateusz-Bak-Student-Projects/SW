@@ -14,19 +14,22 @@ def authenticate(retries=1):
         return None, True, 'Admin mode enabled'
     if not auth.is_valid(id):
         return id, False, 'User not registered'
-    Display.write('Enter passcode')
+    Display.write(' PIN 1: ', 'Enter passcode')
     for i in range(retries):
         primary = pass0.read()
         if auth.verify(id, primary, 0):
             break
         elif i + 1 == retries:
             return id, False, 'Primary password incorrect'
+        Display.write(' PIN 1: Invalid', 'Enter passcode')
+    Display.write(' PIN 1: ********', ' PIN 2: ')
     for i in range(retries):
         secondary = pass1.read()
         if auth.verify(id, secondary, 1):
             break
         elif i + 1 == retries:
             return id, False, 'Secondary password incorrect'
+        Display.write(' PIN 1: ********', ' PIN 2: Invalid')
     return id, True, 'Access granted'
 
 def access(id):

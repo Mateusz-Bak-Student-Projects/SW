@@ -10,7 +10,7 @@ import Display
 # def init():
 #     ADC.setup()
 
-# def read():
+# def read(prompt=' PIN 1: '):
 #     passcodeLength = 8
 #     nSegments = 16
 #     maxValue = 5
@@ -24,7 +24,7 @@ import Display
 #     state = 0
 #     direction = 1
 #     passcode = ''
-#     Display.write(' PIN 1:', '0')
+#     Display.write(prompt, '0')
 #     while len(passcode) < passcodeLength:
 #         v = read_value()
 #         previousState = state
@@ -39,9 +39,9 @@ import Display
 #             state -= 1
 #             direction = -1
 #         if state != previousState:
-#             Display.write(' PIN 1: '+'*'*len(passcode),
+#             Display.write(prompt+'*'*len(passcode),
 #                 upper(hex(state)[2])+']'*state)
 #     return passcode
 
-def read():
-    return input('PIN 1: ')
+def read(prompt=' PIN 1: '):
+    return input(prompt)

@@ -27,7 +27,7 @@ import Display
 #         GPIO.setup(trigger, GPIO.OUT)
 #         GPIO.setup(echo, GPIO.IN)
 
-# def read():
+# def read(firstLine=' PIN 1: ********', prompt=' PIN 2: '):
 #     passcodeLength = 8
 #     nSegments = 4
 #     maxValue = 40
@@ -44,16 +44,16 @@ import Display
 #                 restart = False
 #     states = np.full(nInputs, nSegments)
 #     passcode = ''
-#     Display.write(' PIN 1: ********', ' PIN 2:')
 #     while len(passcode) < passcodeLength:
 #         for i, state in enumerate(states):
 #             v = read_value(i)
 #             newState = states[i] = bisect(bounds[1:], v)
 #             if state == nSegments and newState < nSegments:
 #                 passcode += hex(i * nSegments + newState)[2]
-#                 Display.write(' PIN 1: ********',
-#                     ' PIN 2: '+'*'*len(passcode))
+#                 Display.write(firstLine,
+#                     prompt+'*'*len(passcode))
 #     return passcode
 
-def read():
-    return input('PIN 2: ')
+def read(firstLine=' PIN 1: ********', prompt=' PIN 2: '):
+    print(firstLine)
+    return input(prompt)
