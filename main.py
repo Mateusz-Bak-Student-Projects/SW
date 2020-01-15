@@ -4,6 +4,7 @@ import PrimaryPass as pass0
 import SecondaryPass as pass1
 import SafeLock as lock
 import Logger as logger
+import Display
 
 def authenticate():
     id = rfid.scan_RFID()
@@ -13,9 +14,11 @@ def authenticate():
         return None, True, 'Admin mode enabled'
     if not auth.is_valid(id):
         return id, False, 'User not registered'
+    Display.write('Enter PIN 1')
     primary = pass0.read()
     if not auth.verify(id, primary, 0):
         return id, False, 'Primary password incorrect'
+    Display.write('Enter PIN 2')
     secondary = pass1.read()
     if not auth.verify(id, secondary, 1):
         return id, False, 'Secondary password incorrect'
@@ -53,10 +56,12 @@ def main():
         if id != None:
             logger.log(id, status)
             if valid:
+                Display.write('Unlocked')
                 access(id)
         elif valid:
+            Display.write('Locked', 'Admin mode')
             admin_mode()
-            print('Admin mode disabled')
+        Display.write('Locked')
 
 if __name__ == '__main__':
     main()

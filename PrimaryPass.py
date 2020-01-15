@@ -1,4 +1,5 @@
 import numpy as np
+import Display
 # import Adafruit_BBIO.ADC as ADC
 
 # analog = 'P9_33'
@@ -23,8 +24,10 @@ import numpy as np
 #     state = 0
 #     direction = 1
 #     passcode = ''
+#     Display.write(' PIN 1:', '0')
 #     while len(passcode) < passcodeLength:
 #         v = read_value()
+#         previousState = state
 #         if state < nSegments - 1 and v > lb[state+1]:
 #             if direction < 0:
 #                 passcode += hex(state)[2]
@@ -35,6 +38,9 @@ import numpy as np
 #                 passcode += hex(state)[2]
 #             state -= 1
 #             direction = -1
+#         if state != previousState:
+#             Display.write(' PIN 1: '+'*'*len(passcode),
+#                 upper(hex(state)[2])+']'*state)
 #     return passcode
 
 def read():

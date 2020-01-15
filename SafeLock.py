@@ -1,4 +1,3 @@
-import Display
 # import Adafruit_BBIO.PWM as PWM
 # import Adafruit_BBIO.GPIO as GPIO
 
@@ -20,12 +19,10 @@ locked = { 0 : False }
 def open(id):
     # set_angle(90)
     locked[id] = False
-    Display.write('Unlocked\n\r')
 
 def close(id):
     # set_angle(0)
     locked[id] = True
-    Display.write('Locked\n\r')
 
 def is_open(id):
     # return not get_button()
