@@ -48,14 +48,15 @@ def admin_mode():
     if not auth.is_admin(id):
         reset_password(id)
 
-def reset_password(id):
+def reset_password(id, confirm=True):
     primary = pass0.read()
-    if primary == None:
-        return
+    if primary == None or (confirm and primary != pass0.read()):
+        return False
     secondary = pass1.read()
-    if secondary == None:
-        return
+    if secondary == None or (confirm and secondary != pass1.read()):
+        return False
     auth.set(id, primary, secondary)
+    return True
 
 def main():
     while True:
