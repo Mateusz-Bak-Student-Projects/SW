@@ -74,6 +74,7 @@ def reset_password(id, confirm=True):
 
 def main():
     while True:
+        Display.write('Locked')
         id, valid, status = authenticate()
         print(status)
         if id != None:
@@ -82,7 +83,6 @@ def main():
                 access(id)
         elif valid:
             admin_mode()
-        Display.write('Locked')
 
 if __name__ == '__main__':
     main()
