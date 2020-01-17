@@ -10,7 +10,6 @@ MFRC522 mfrc522(10, 9);
 
 void setup()
 {
-    // Serial.begin(9600);
     uart.begin(9600);
 
     lcd.begin(16, 2);
@@ -29,8 +28,10 @@ void loop()
     }
     if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial())
     {
-        String id = String(getID());
-        uart.write(id + '\n');
+        String id = String(getID()) + '\n';
+        char buffer[128];
+        id.toCharArray(buffer, 128);
+        uart.write(buffer);
         mfrc522.PICC_HaltA();
     }
 }
