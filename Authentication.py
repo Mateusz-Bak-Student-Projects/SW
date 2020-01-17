@@ -16,8 +16,7 @@ def set(id, primary, secondary):
     primary = hash_password(primary)
     secondary = hash_password(secondary)
     conn = sqlite3.connect(database)
-    conn.execute('INSERT INTO users(id, pass0, pass1) VALUES(?, ?, ?) \
-        ON CONFLICT(id) DO UPDATE SET pass0=excluded.pass0, pass1=excluded.pass1;',
+    conn.execute('REPLACE INTO users(id, pass0, pass1) VALUES(?, ?, ?);',
         (id, primary, secondary))
     conn.commit()
     conn.close()
