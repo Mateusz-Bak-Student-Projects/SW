@@ -7,7 +7,7 @@
 #     ser = serial.Serial(port="/dev/ttyO1", baudrate=9600)
 #     ser.close()
 #     ser.open()
-#     ser.write(text)
+#     ser.write(text.encode('utf-8'))
 #     ser.close()
 
 def write(*lines):
