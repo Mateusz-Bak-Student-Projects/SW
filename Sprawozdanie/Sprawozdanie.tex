@@ -8,8 +8,54 @@
 \usepackage{url}
 \usepackage{pdfpages}
 \usepackage{listings}
+\usepackage{ucs}
+\usepackage{xcolor}
 
 \marginsize{2.5cm}{2.5cm}{1.75cm}{1.75cm}
+
+\definecolor{codecomment}{rgb}{0,0.5,0}
+\definecolor{codekeyword}{rgb}{0,0,1}
+\definecolor{codestring}{rgb}{0.64,0.08,0.08}
+
+\lstdefinestyle{mystyle}{
+	commentstyle=\color{codecomment}\textit,
+	keywordstyle=\color{codekeyword},
+	stringstyle=\color{codestring},
+	numberstyle=\color{gray},
+	basicstyle=\ttfamily,
+	captionpos=b,
+	tabsize=4,
+	numbers=left,
+	numbersep=12pt,
+	xleftmargin=36pt,
+	breaklines=true,
+	escapechar=|
+}
+
+\lstset{style=mystyle}
+
+\lstset{
+	inputencoding=utf8x, 
+	extendedchars=\true,
+	literate={ą}{{\k{a}}}1
+	{Ą}{{\k{A}}}1
+	{ę}{{\k{e}}}1
+	{Ę}{{\k{E}}}1
+	{ó}{{\'o}}1
+	{Ó}{{\'O}}1
+	{ś}{{\'s}}1
+	{Ś}{{\'S}}1
+	{ł}{{\l{}}}1
+	{Ł}{{\L{}}}1
+	{ż}{{\.z}}1
+	{Ż}{{\.Z}}1
+	{ź}{{\'z}}1
+	{Ź}{{\'Z}}1
+	{ć}{{\'c}}1
+	{Ć}{{\'C}}1
+	{ń}{{\'n}}1
+	{Ń}{{\'N}}1
+}
 
 \begin{document}
 	
@@ -57,7 +103,49 @@
 	Identyfikacja polega na odczycie przez czytnik RFID numeru UID transpondera użytkownika. Czytnik jest podłączony do platformy Arduino UNO. Po wykryciu transpondera następuje odczytanie numeru identyfikacyjnego i przesłanie go do programu głównego za pośrednictwem UART. Następnie wykonane zostaje zapytanie do bazy danych, które pozwala stwierdzić, czy użytkownik o danym UID jest zarejestrowany w systemie, a także czy posiada on status administratora.
 	
 	\subsection{Uwierzytelnianie}
-	%TODO
+	Projekt zawiera dwa mechanizmy uwierzytelniania użytkownika, uruchamiane kolejno, bezpośrednio po pomyślnej identyfikacji. Pierwszy z nich polega na wprowadzeniu szyfru za pomocą potencjometru, przekręcając jego gałkę na przemian zgodnie i przeciwnie do ruchu wskazówek zegara. Każda zmiana kierunku obrotu, przy pewnej ustalonej dokładności odczytu, powoduje wprowadzenie pojedynczej cyfry szyfru. Kod definiujący proces wprowadzania szyfru podstawowego został przedstawiony na listingu \ref{pass0}.
+	\begin{lstlisting}[language=Python, caption={Fragment kodu sterującego wprowadzaniem szyfru podstawowego}, label=pass0]
+def read():
+	# Inicjalizacja
+	[...]
+	passcode = ''
+	# Pętla odczytująca kolejne znaki
+	while len(passcode) < passcodeLength:
+		# Odczyt wartości napięcia z potencjometru
+		v = read_value()
+		previousState = state
+		# Odczytana wartość jest większa od dolnego progu|\linebreak|dla cyfry większej o 1
+		if state < nSegments - 1 and v > lb[state+1]:
+			if direction < 0:
+				passcode += hex(state)[2]
+			state += 1
+			direction = 1
+		# Odczytana wartość jest mniejsza od górnego progu|\linebreak|dla cyfry mniejszej o 1
+		elif state > 0 and v < ub[state-1]:
+			if direction > 0:
+				passcode += hex(state)[2]
+			state -= 1
+			direction = -1
+	return passcode
+	\end{lstlisting}
+	Szyfr drugorzędny jest wprowadzany za pomocą czujników odległości. Kolejne cyfry są generowane na podstawie numeru czujnika oraz wartości odczytanej przez niego odległości. Kod definiujący proces wprowadzania szyfru drugorzędnego został przedstawiony na listingu \ref{pass1}.
+	\begin{lstlisting}[language=Python, caption={Fragment kodu sterującego wprowadzaniem szyfru drugorzędnego}, label=pass1]
+def read():
+	# Inicjalizacja
+	[...]
+	passcode = ''
+	# Pętla odczytująca kolejne znaki
+	while len(passcode) < passcodeLength:
+		# Pętla iterująca po stanach kolejnych czujników
+		for i, state in enumerate(states):
+			# Odczyt odległości z czujnika o numerze i
+			v = read_value(i)
+			# Kwantyzacja wartości odległości
+			newState = states[i] = bisect(bounds, v)
+			if state == nSegments and newState < nSegments:
+				passcode += hex(i * nSegments + newState)[2]
+	return passcode
+	\end{lstlisting}
 	
 	\subsection{Sterowanie zamkiem}
 	%TODO
