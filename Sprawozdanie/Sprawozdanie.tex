@@ -153,7 +153,13 @@ def read():
 	W zaprojektowanym układzie funkcję zamka pełni serwomechanizm, który jest przełączany pomiędzy stanami odpowiadającymi otwarciu i zamknięciu zamka. Do jego obsługi wykorzystano bibliotekę \linebreak\verb|Adafruit_BBIO.PWM|. Zgodnie ze scenariuszem opisanym w sekcji \ref{scenario}, zamek otwiera się po pomyślnym uwierzytelnieniu użytkownika, natomiast jego zamknięcie następuje po naciśnięciu przycisku. Stan przycisku jest odczytywany przez program za pomocą biblioteki \verb|Adafruit_BBIO.GPIO|.
 	
 	\subsection{Sposób przechowywania danych}
-	%TODO
+	Dane wykorzystywane do uwierzytelniania i autoryzacji użytkowników przechowywane są w bazie danych SQLite. Na jej schemat składają się trzy relacje:
+	\begin{itemize}
+		\item \verb|users|, zawierająca rekordy opisujące użytkowników (identyfikator, wartości funkcji haszujących dla kodów dostępu, przypisany numer zamka),
+		\item \verb|admins|, zawierająca rekordy z identyfikatorami administratorów systemu,
+		\item \verb|logs|, zawierająca rekordy opisujące próby dostępu do systemu (czas dostępu, identyfikator użytkownika, status).
+	\end{itemize}
+	%TODO: Schemat bazy danych
 	
 	\section{Wnioski}
 	%TODO
