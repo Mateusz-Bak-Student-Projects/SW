@@ -54,7 +54,7 @@
 	Komunikaty systemu prezentowane są użytkownikowi za pomocą układu wyświetlacza LCD podłączonego do platformy Arduino UNO. Tekst do wyświetlenia jest przesyłany z programu głównego, uruchomionego na platformie BeagleBone Black, za pośrednictwem UART.
 	
 	\subsection{Identyfikacja użytkownika}
-	%TODO
+	Identyfikacja polega na odczycie przez czytnik RFID numeru UID transpondera użytkownika. Czytnik jest podłączony do platformy Arduino UNO. Po wykryciu transpondera następuje odczytanie numeru identyfikacyjnego i przesłanie go do programu głównego za pośrednictwem UART. Następnie wykonane zostaje zapytanie do bazy danych, które pozwala stwierdzić, czy użytkownik o danym UID jest zarejestrowany w systemie, a także czy posiada on status administratora.
 	
 	\subsection{Uwierzytelnianie}
 	%TODO
