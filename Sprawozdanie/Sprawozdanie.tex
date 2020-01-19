@@ -97,10 +97,10 @@
 	Zmiana kodów dostępu jest również możliwa bez udziału administratora, jeśli zamek jest w danym momencie otwarty, a transponder użytkownika zostanie ponownie odczytany. W tym przypadku procedura zmiany danych uwierzytelniania przebiega zgodnie z punktami 3--12 scenariusza dostępu administracyjnego.
 	
 	\noindent\\
-	Komunikaty systemu prezentowane są użytkownikowi za pomocą układu wyświetlacza LCD podłączonego do platformy Arduino UNO. Tekst do wyświetlenia jest przesyłany z programu głównego, uruchomionego na platformie BeagleBone Black, za pośrednictwem UART.
+	Komunikaty systemu prezentowane są użytkownikowi za pomocą układu wyświetlacza LCD podłączonego do platformy Arduino UNO, obsługiwanego przy pomocy biblioteki \verb|LiquidCrystal_I2C.h| wykorzystującej protokół I2C do komunikacji z urządzeniem. Tekst do wyświetlenia jest przesyłany z programu głównego, uruchomionego na platformie BeagleBone Black, za pośrednictwem UART.
 	
 	\subsection{Identyfikacja użytkownika}
-	Identyfikacja polega na odczycie przez czytnik RFID numeru UID transpondera użytkownika. Czytnik jest podłączony do platformy Arduino UNO. Po wykryciu transpondera następuje odczytanie numeru identyfikacyjnego i przesłanie go do programu głównego za pośrednictwem UART. Następnie wykonane zostaje zapytanie do bazy danych, które pozwala stwierdzić, czy użytkownik o danym UID jest zarejestrowany w systemie, a także czy posiada on status administratora.
+	Identyfikacja polega na odczycie przez czytnik RFID numeru UID transpondera użytkownika. Czytnik jest podłączony do platformy Arduino UNO i obsługiwany poprzez protokół SPI za pośrednictwem bibliotek \verb|SPI.h| oraz \verb|MFRC522.h|. Po wykryciu transpondera następuje odczytanie numeru identyfikacyjnego i przesłanie go do programu głównego za pośrednictwem UART. Następnie wykonane zostaje zapytanie do bazy danych, które pozwala stwierdzić, czy użytkownik o danym UID jest zarejestrowany w systemie, a także czy posiada on status administratora.
 	
 	\subsection{Uwierzytelnianie}
 	Projekt zawiera dwa mechanizmy uwierzytelniania użytkownika, uruchamiane kolejno, bezpośrednio po pomyślnej identyfikacji. Pierwszy z nich polega na wprowadzeniu szyfru za pomocą potencjometru, przekręcając jego gałkę na przemian zgodnie i przeciwnie do ruchu wskazówek zegara. Każda zmiana kierunku obrotu, przy pewnej ustalonej dokładności odczytu, powoduje wprowadzenie pojedynczej cyfry szyfru. Kod definiujący proces wprowadzania szyfru podstawowego został przedstawiony na listingu \ref{pass0}.
@@ -146,6 +146,7 @@ def read():
 				passcode += hex(i * nSegments + newState)[2]
 	return passcode
 	\end{lstlisting}
+	Obydwa układy są podłączone do platformy BeagleBone Black i obsługiwane za pomocą bibliotek \linebreak\verb|Adafruit_BBIO.ADC| oraz \verb|Adafruit_BBIO.GPIO|.
 	
 	\subsection{Sterowanie zamkiem}
 	%TODO
