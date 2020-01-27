@@ -1,16 +1,14 @@
 #include <Wire.h>
-#include <SoftwareSerial.h>
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
 #include <MFRC522.h>
 
-SoftwareSerial uart(0, 1);
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 MFRC522 mfrc522(10, 9);
 
 void setup()
 {
-    uart.begin(9600);
+    Serial.begin(9600);
 
     lcd.begin(16, 2);
     lcd.backlight();
@@ -22,16 +20,16 @@ void setup()
 
 void loop()
 {
-    if (uart.available() > 0)
+    if (Serial.available() > 0)
     {
-        display(uart.read());
+        char buffer[1];
+        Serial.readBytes(buffer, 1);
+        display(buffer[0]);
     }
     if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial())
     {
         String id = String(getID()) + '\n';
-        char buffer[128];
-        id.toCharArray(buffer, 128);
-        uart.write(buffer);
+        Serial.print(id);
         mfrc522.PICC_HaltA();
     }
 }
