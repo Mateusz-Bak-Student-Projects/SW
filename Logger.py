@@ -14,7 +14,8 @@ def init():
     conn.execute('CREATE TABLE IF NOT EXISTS logs ( \
         access_time TEXT PRIMARY KEY, \
         id INTEGER NOT NULL, \
-        status TEXT);')
+        status TEXT, \
+        FOREIGN KEY(id) REFERENCES users(id));')
     conn.commit()
     conn.close()
 
