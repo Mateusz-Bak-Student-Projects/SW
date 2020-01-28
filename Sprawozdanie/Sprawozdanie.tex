@@ -166,7 +166,10 @@ def read():
 		\item \verb|admins|, zawierająca rekordy z identyfikatorami administratorów systemu,
 		\item \verb|logs|, zawierająca rekordy opisujące próby dostępu do systemu (czas dostępu, identyfikator użytkownika, status).
 	\end{itemize}
-	%TODO: Schemat bazy danych
+	\begin{figure}[!h]
+		\includegraphics[width=\textwidth]{database.png}
+		\caption{Schemat relacyjny bazy danych}
+	\end{figure}
 	
 	\section{Wnioski}
 	W trakcie realizacji projektu główne problemy dotyczyły niespójności między używaną składnią a wykorzystywaną wersją języka oraz innym działaniem użytych funkcji niż oczekiwano. Również zaskoczeniem było tak skomplikowane podłączenie wyświetlacza LCD do platformy BeagleBone Black. Realizacja pozostałych elementów projektu przebiegła zgodnie z założonym planem.
