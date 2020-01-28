@@ -66,7 +66,12 @@
 	
 	\section{Realizacja}
 	Do realizacji projektu wykorzystano platformy BeagleBone Black i Arduino UNO, do których podłączono czujniki pomiarowe i elementy wykonawcze zgodnie ze schematem \ref{schematic}. Moduł RFID MFRC522 oraz wyświetlacz LCD wyposażony w konwerter LCM1602 I2C zostały podłączone do platformy Arduino UNO, natomiast potencjometr, serwomechanizm oraz ultradźwiękowy czujnik odległości HC-SR04 podłączono bezpośrednio do platformy BeagleBone Black, na której uruchomiony jest główny program obsługujący układ.
-	%TODO Zdjęcie i schemat układu
+	%TODO Schemat układu
+	\begin{figure}[!h]
+		\includegraphics[width=\textwidth]{uklad.jpg}
+		\caption{Zdjęcie gotowego układu}
+	\end{figure}
+	\\
 	Początkowo zakładano realizację projektu z wykorzystaniem tylko jednej platformy sprzętowej (BeagleBone Black), jednak podłączenie do niej wyświetlacza LCD oraz modułu RFID okazało się być problematyczne ze względu na ograniczoną dokumentację potrzebnych bibliotek. Problem rozwiązano przy użyciu Arduino UNO – podłączono do niego wyświetlacz i moduł RFID, oraz zapewniono komunikację z BeagleBone Black za pomocą UART. Pozostałe elementy zostały zrealizowane zgodnie z założeniami.
 	
 	\subsection{Interakcja z użytkownikiem}
