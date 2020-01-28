@@ -65,14 +65,16 @@
 	Wykorzystanie modułu RFID do identyfikacji użytkownika, obsługa potencjometru oraz czujników odległości do wprowadzania szyfru, pokazywanie komunikatów na wyświetlaczu LCD, zastosowanie serwomechanizmu jako elementu imitującego zamek, przechowywanie danych autoryzacji w bazie danych.
 	
 	\section{Realizacja}
-	Do realizacji projektu wykorzystano platformy BeagleBone Black i Arduino UNO, do których podłączono czujniki pomiarowe i elementy wykonawcze zgodnie ze schematem \ref{schematic}. Moduł RFID MFRC522 oraz wyświetlacz LCD wyposażony w konwerter LCM1602 I2C zostały podłączone do platformy Arduino UNO, natomiast potencjometr, serwomechanizm oraz ultradźwiękowy czujnik odległości HC-SR04 podłączono bezpośrednio do platformy BeagleBone Black, na której uruchomiony jest główny program obsługujący układ.
+	Do realizacji projektu wykorzystano platformy BeagleBone Black i Arduino UNO, do których podłączono czujniki pomiarowe i elementy wykonawcze zgodnie ze schematem na rysunku \ref{schematic}. Moduł RFID MFRC522 oraz wyświetlacz LCD wyposażony w konwerter LCM1602 I2C zostały podłączone do platformy Arduino UNO, natomiast potencjometr, serwomechanizm oraz ultradźwiękowy czujnik odległości HC-SR04 podłączono bezpośrednio do platformy BeagleBone Black, na której uruchomiony jest główny program obsługujący układ.
 	\begin{figure}[!h]
-		\includegraphics[width=\textwidth]{uklad.jpg} %TODO Zamienić na schemat
+		\centering
+		\includegraphics[width=\textwidth]{schemat.png}
 		\caption{Schemat połączeń w projektowanym układzie}
 		\label{schematic}
 	\end{figure}
 	\begin{figure}[!h]
-		\includegraphics[width=\textwidth]{uklad.jpg}
+		\centering
+		\includegraphics[width=0.8\textwidth]{uklad.jpg}
 		\caption{Zdjęcie gotowego układu}
 	\end{figure}
 	\\
