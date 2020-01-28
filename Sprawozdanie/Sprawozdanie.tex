@@ -66,18 +66,23 @@
 	
 	\section{Realizacja}
 	Do realizacji projektu wykorzystano platformy BeagleBone Black i Arduino UNO, do których podłączono czujniki pomiarowe i elementy wykonawcze zgodnie ze schematem \ref{schematic}. Moduł RFID MFRC522 oraz wyświetlacz LCD wyposażony w konwerter LCM1602 I2C zostały podłączone do platformy Arduino UNO, natomiast potencjometr, serwomechanizm oraz ultradźwiękowy czujnik odległości HC-SR04 podłączono bezpośrednio do platformy BeagleBone Black, na której uruchomiony jest główny program obsługujący układ.
-	%TODO Schemat układu
+	\begin{figure}[!h]
+		\includegraphics[width=\textwidth]{uklad.jpg} %TODO Zamienić na schemat
+		\caption{Schemat połączeń w projektowanym układzie}
+		\label{schematic}
+	\end{figure}
 	\begin{figure}[!h]
 		\includegraphics[width=\textwidth]{uklad.jpg}
 		\caption{Zdjęcie gotowego układu}
 	\end{figure}
 	\\
-	Początkowo zakładano realizację projektu z wykorzystaniem tylko jednej platformy sprzętowej (BeagleBone Black), jednak podłączenie do niej wyświetlacza LCD oraz modułu RFID okazało się być problematyczne ze względu na ograniczoną dokumentację potrzebnych bibliotek. Problem rozwiązano przy użyciu Arduino UNO – podłączono do niego wyświetlacz i moduł RFID, oraz zapewniono komunikację z BeagleBone Black za pomocą UART. Pozostałe elementy zostały zrealizowane zgodnie z założeniami.
+	Początkowo zakładano realizację projektu z wykorzystaniem tylko jednej platformy sprzętowej (BeagleBone Black), jednak podłączenie do niej wyświetlacza LCD oraz modułu RFID okazało się być problematyczne ze względu na ograniczoną dokumentację potrzebnych bibliotek. Problem rozwiązano przy użyciu Arduino UNO – podłączono do niego wyświetlacz i moduł RFID, oraz zapewniono komunikację z~BeagleBone Black za pomocą UART. Pozostałe elementy zostały zrealizowane zgodnie z założeniami.
 	
 	\subsection{Interakcja z użytkownikiem}
 	\label{scenario}
 	Interakcja systemu z użytkownikiem przebiega następująco:
 	\begin{enumerate}
+		\setlength\itemsep{-0.2em}
 		\item Użytkownik identyfikuje się za pomocą prywatnego transpondera RFID.
 		\item System weryfikuje użytkownika i wyświetla komunikat z żądaniem wprowadzenia szyfru podstawowego.
 		\item Użytkownik wprowadza szyfr podstawowy za pomocą układu potencjometru.
@@ -88,6 +93,7 @@
 	\end{enumerate}
 	Możliwy jest również alternatywny scenariusz, w którym odebrany przez czytnik RFID identyfikator należy do administratora systemu:
 	\begin{enumerate}
+		\setlength\itemsep{-0.2em}
 		\item Administrator identyfikuje się za pomocą transpondera RFID.
 		\item System weryfikuje użytkownika i przełącza się w tryb administracyjny.
 		\item System odczytuje za pomocą czytnika RFID identyfikator użytkownika, dla którego mają zostać wprowadzone nowe kody dostępu.
@@ -108,10 +114,10 @@
 	Komunikaty systemu prezentowane są użytkownikowi za pomocą układu wyświetlacza LCD podłączonego do platformy Arduino UNO, obsługiwanego przy pomocy biblioteki \verb|LiquidCrystal_I2C.h| wykorzystującej protokół I2C do komunikacji z urządzeniem. Tekst do wyświetlenia jest przesyłany z programu głównego, uruchomionego na platformie BeagleBone Black, za pośrednictwem UART.
 	
 	\subsection{Identyfikacja użytkownika}
-	Identyfikacja polega na odczycie przez czytnik RFID numeru UID transpondera użytkownika. Czytnik jest podłączony do platformy Arduino UNO i obsługiwany poprzez protokół SPI za pośrednictwem bibliotek \verb|SPI.h| oraz \verb|MFRC522.h|. Po wykryciu transpondera następuje odczytanie numeru identyfikacyjnego i przesłanie go do programu głównego za pośrednictwem UART. Następnie wykonane zostaje zapytanie do bazy danych, które pozwala stwierdzić, czy użytkownik o danym UID jest zarejestrowany w systemie, a także czy posiada on status administratora.
+	Identyfikacja polega na odczycie przez czytnik RFID numeru UID transpondera użytkownika. Czytnik jest podłączony do platformy Arduino UNO i obsługiwany poprzez protokół SPI za pośrednictwem bibliotek \verb|SPI.h| oraz \verb|MFRC522.h|. Po wykryciu transpondera następuje odczytanie numeru identyfikacyjnego i~przesłanie go do programu głównego za pośrednictwem UART. Następnie wykonane zostaje zapytanie do bazy danych, które pozwala stwierdzić, czy użytkownik o danym UID jest zarejestrowany w~systemie, a~także czy posiada on status administratora.
 	
 	\subsection{Uwierzytelnianie}
-	Projekt zawiera dwa mechanizmy uwierzytelniania użytkownika, uruchamiane kolejno, bezpośrednio po pomyślnej identyfikacji. Pierwszy z nich polega na wprowadzeniu szyfru za pomocą potencjometru, przekręcając jego gałkę na przemian zgodnie i przeciwnie do ruchu wskazówek zegara. Każda zmiana kierunku obrotu, przy pewnej ustalonej dokładności odczytu, powoduje wprowadzenie pojedynczej cyfry szyfru. Kod definiujący proces wprowadzania szyfru podstawowego został przedstawiony na listingu \ref{pass0}.
+	Projekt zawiera dwa mechanizmy uwierzytelniania użytkownika, uruchamiane kolejno, bezpośrednio po~pomyślnej identyfikacji. Pierwszy z nich polega na wprowadzeniu szyfru za pomocą potencjometru, przekręcając jego gałkę na przemian zgodnie i przeciwnie do ruchu wskazówek zegara. Każda zmiana kierunku obrotu, przy pewnej ustalonej dokładności odczytu, powoduje wprowadzenie pojedynczej cyfry szyfru. Kod definiujący proces wprowadzania szyfru podstawowego został przedstawiony na listingu \ref{pass0}.
 	\begin{lstlisting}[language=Python, caption={Fragment kodu sterującego wprowadzaniem szyfru podstawowego}, label=pass0]
 def read():
 	# Inicjalizacja
@@ -136,7 +142,7 @@ def read():
 			direction = -1
 	return passcode
 	\end{lstlisting}
-	Szyfr drugorzędny jest wprowadzany za pomocą czujników odległości. Kolejne cyfry są generowane na podstawie numeru czujnika oraz wartości odczytanej przez niego odległości. Kod definiujący proces wprowadzania szyfru drugorzędnego został przedstawiony na listingu \ref{pass1}.
+	Szyfr drugorzędny jest wprowadzany za pomocą czujników odległości. Kolejne cyfry są generowane na~podstawie numeru czujnika oraz wartości odczytanej przez niego odległości. Kod definiujący proces wprowadzania szyfru drugorzędnego został przedstawiony na listingu \ref{pass1}.
 	\begin{lstlisting}[language=Python, caption={Fragment kodu sterującego wprowadzaniem szyfru drugorzędnego}, label=pass1]
 def read():
 	# Inicjalizacja
@@ -157,12 +163,12 @@ def read():
 	Obydwa układy są podłączone do platformy BeagleBone Black i obsługiwane za pomocą bibliotek \linebreak\verb|Adafruit_BBIO.ADC| oraz \verb|Adafruit_BBIO.GPIO|.
 	
 	\subsection{Sterowanie zamkiem}
-	W zaprojektowanym układzie funkcję zamka pełni serwomechanizm, który jest przełączany pomiędzy stanami odpowiadającymi otwarciu i zamknięciu zamka. Do jego obsługi wykorzystano bibliotekę \linebreak\verb|Adafruit_BBIO.PWM|. Zgodnie ze scenariuszem opisanym w sekcji \ref{scenario}, zamek otwiera się po pomyślnym uwierzytelnieniu użytkownika, natomiast jego zamknięcie następuje po naciśnięciu przycisku. Stan przycisku jest odczytywany przez program za pomocą biblioteki \verb|Adafruit_BBIO.GPIO|.
+	W zaprojektowanym układzie funkcję zamka pełni serwomechanizm, który jest przełączany pomiędzy stanami odpowiadającymi otwarciu i zamknięciu zamka. Do jego obsługi wykorzystano bibliotekę \linebreak\verb|Adafruit_BBIO.PWM|. Zgodnie ze scenariuszem opisanym w sekcji \ref{scenario}, zamek otwiera się po pomyślnym uwierzytelnieniu użytkownika, natomiast jego zamknięcie następuje po naciśnięciu przycisku. Stan~przycisku jest odczytywany przez program za pomocą biblioteki \verb|Adafruit_BBIO.GPIO|.
 	
 	\subsection{Sposób przechowywania danych}
 	Dane wykorzystywane do uwierzytelniania i autoryzacji użytkowników przechowywane są w bazie danych SQLite. Na jej schemat składają się trzy relacje:
 	\begin{itemize}
-		\item \verb|users|, zawierająca rekordy opisujące użytkowników (identyfikator, wartości funkcji haszujących dla kodów dostępu, przypisany numer zamka),
+		\item \verb|users|, zawierająca rekordy opisujące użytkowników (identyfikator, wartości funkcji haszujących dla~kodów dostępu, przypisany numer zamka),
 		\item \verb|admins|, zawierająca rekordy z identyfikatorami administratorów systemu,
 		\item \verb|logs|, zawierająca rekordy opisujące próby dostępu do systemu (czas dostępu, identyfikator użytkownika, status).
 	\end{itemize}
@@ -172,6 +178,7 @@ def read():
 	\end{figure}
 	
 	\section{Wnioski}
-	W trakcie realizacji projektu główne problemy dotyczyły niespójności między używaną składnią a wykorzystywaną wersją języka oraz innym działaniem użytych funkcji niż oczekiwano. Również zaskoczeniem było tak skomplikowane podłączenie wyświetlacza LCD do platformy BeagleBone Black. Realizacja pozostałych elementów projektu przebiegła zgodnie z założonym planem.
+	Celem projektu było skonstruowanie zamka szyfrowego, wykorzystującego kilka różnych czujników do~mechanizmu uwierzytelniania użytkownika. Pomimo konieczności zmiany wykorzystywanych urządzeń, cel~został osiągnięty. 
+	W trakcie realizacji projektu główne trudności były związane z implementacją programu kontrolującego układ, bez możliwości sprawdzania poprawności działania na bieżąco - było to możliwe jedynie podczas zajęć laboratoryjnych. Pomimo prostoty obsługi poszczególnych komponentów z osobna, wyzwaniem okazała się ich wzajemna integracja. W połączeniu z poprzednim problemem objawiało się to błędami w kodzie, których wykrycie i naprawa zajmowała istotną część czasu poświęcanego na projekt. Realizacja pozostałych elementów projektu przebiegła zgodnie z założonym planem.
 	
 \end{document}
